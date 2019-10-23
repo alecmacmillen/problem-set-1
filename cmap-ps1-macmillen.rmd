@@ -1,0 +1,58 @@
+---
+title: "CMAP PS1"
+author: "Alec MacMillen"
+date: "10/22/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(haven)
+library(broom)
+library(cluster)
+library(fpc)
+library(factoextra)
+
+setwd("C:/Users/Alec/Documents/Academics/Second Year/Fall Quarter/MACS 40500 - Computational Methods for American Politics/Problem Sets/problem-set-1")
+```
+
+### Question 1 - Data Loading
+
+Load the state legislative professionalism data.
+
+```{r}
+load("State Leg Prof Data & Codebook/legprof-components.v1.0.RData")
+```
+
+### Question 2 - Data Munging
+
+Munge the data:
+1. Select only continuous features,
+2. Restrict data to 2009-10 legislative session,
+3. Omit missing values,
+4. Standardize input features,
+5. Other steps necessary to make the data in workable form.
+
+```{r}
+legprof <- x %>% 
+  select(state:expend) %>% 
+  filter(sessid == "2009/10", complete.cases(.)) %>% 
+  mutate(t_slength = scale(t_slength),
+         slength = scale(slength),
+         salary_real = scale(salary_real),
+         expend = scale(expend))
+
+n_legprof <- legprof$state
+```
+
+### Question 3 - Diagnosing Clusterability
+
+```{r}
+factoextra::get_clust_tendency(legprof, n = 30)
+```
+
+
+
+
